@@ -48,6 +48,10 @@ class WsService {
         try {
           const raw = typeof evt.data === 'string' ? evt.data : JSON.stringify(evt.data);
           const frame = JSON.parse(raw) as SensingFrame;
+          // Skip handshake/pong/other envelopes; only real sensing frames carry these.
+          if (!frame || !frame.features || !frame.classification) {
+            return;
+          }
           this.listeners.forEach((listener) => listener(frame));
         } catch {
           // ignore malformed frames

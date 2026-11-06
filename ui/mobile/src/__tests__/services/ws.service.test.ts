@@ -102,6 +102,46 @@ describe('WsService', () => {
     });
   });
 
+  describe('live frames', () => {
+    it('forwards sensing frames and drops handshake envelopes', () => {
+      const OrigWebSocket = globalThis.WebSocket;
+      let socket: any;
+      class MockWebSocket {
+        static OPEN = 1;
+        static CONNECTING = 0;
+        readyState = 0;
+        onopen: (() => void) | null = null;
+        onmessage: ((e: { data: string }) => void) | null = null;
+        close() {}
+        constructor() {
+          socket = this;
+        }
+      }
+      globalThis.WebSocket = MockWebSocket as any;
+      try {
+        const ws = createWsService();
+        const listener = jest.fn();
+        ws.subscribe(listener);
+        ws.connect('http://192.168.1.10:8080');
+        socket.onopen();
+        socket.onmessage({ data: JSON.stringify({ type: 'connection_established', payload: {} }) });
+        expect(listener).not.toHaveBeenCalled();
+        const frame = {
+          type: 'sensing_update',
+          nodes: [],
+          features: { mean_rssi: -50 },
+          classification: { presence: true, motion_level: 'active', confidence: 0.9 },
+          signal_field: { grid_size: [1, 1, 1], values: [0] },
+        };
+        socket.onmessage({ data: JSON.stringify(frame) });
+        expect(listener).toHaveBeenCalledTimes(1);
+        ws.disconnect();
+      } finally {
+        globalThis.WebSocket = OrigWebSocket;
+      }
+    });
+  });
+
   describe('connect with empty URL', () => {
     it('falls back to simulation mode when URL is empty', () => {
       const ws = createWsService();

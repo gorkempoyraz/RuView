@@ -18,7 +18,9 @@ export interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      serverUrl: 'http://localhost:3000',
+      // localhost would point at the phone itself. Empty = demo mode until the user
+      // enters the sensing server's LAN address in Settings.
+      serverUrl: '',
       rssiScanEnabled: false,
       theme: 'system',
       alertSoundEnabled: true,

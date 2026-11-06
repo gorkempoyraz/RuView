@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
-import { API_POSE_FRAMES_PATH, API_POSE_STATUS_PATH, API_POSE_ZONES_PATH } from '@/constants/api';
+import { API_HEALTH_PATH, API_POSE_FRAMES_PATH, API_POSE_ZONES_PATH } from '@/constants/api';
 import type { ApiError, HistoricalFrames, PoseStatus, ZoneConfig } from '@/types/api';
 
 class ApiService {
@@ -77,7 +77,8 @@ class ApiService {
   }
 
   getStatus(): Promise<PoseStatus> {
-    return this.get<PoseStatus>(API_POSE_STATUS_PATH);
+    // The sensing server has no /api/v1/pose/status route; /health is what it serves.
+    return this.get<PoseStatus>(API_HEALTH_PATH);
   }
 
   getZones(): Promise<ZoneConfig[]> {

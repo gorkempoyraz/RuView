@@ -55,6 +55,9 @@ export const ServerUrlInput = ({ value, onChange, onSave }: ServerUrlInputProps)
           marginBottom: spacing.sm,
         }}
       />
+      <ThemedText preset="bodySm" style={{ color: colors.textSecondary, marginBottom: spacing.sm }}>
+        Use the LAN IP of the computer running the sensing server (not localhost), e.g. http://192.168.1.20:8080
+      </ThemedText>
       {!validation.valid && (
         <ThemedText preset="bodySm" style={{ color: colors.danger, marginBottom: spacing.sm }}>
           {validation.error}

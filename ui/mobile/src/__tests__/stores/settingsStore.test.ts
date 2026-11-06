@@ -4,7 +4,7 @@ describe('useSettingsStore', () => {
   beforeEach(() => {
     // Reset to defaults by manually setting all values
     useSettingsStore.setState({
-      serverUrl: 'http://localhost:3000',
+      serverUrl: '',
       rssiScanEnabled: false,
       theme: 'system',
       alertSoundEnabled: true,
@@ -12,8 +12,8 @@ describe('useSettingsStore', () => {
   });
 
   describe('default values', () => {
-    it('has default serverUrl as http://localhost:3000', () => {
-      expect(useSettingsStore.getState().serverUrl).toBe('http://localhost:3000');
+    it('has an empty default serverUrl (demo mode)', () => {
+      expect(useSettingsStore.getState().serverUrl).toBe('');
     });
 
     it('has rssiScanEnabled false by default', () => {
